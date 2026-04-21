@@ -28,6 +28,16 @@ SMARTSTORE_FILE = "<스마트스토어_파일_경로>"
 PASSWORD = "<비밀번호>"
 HANMI_TEMPLATE = os.path.expanduser("~/smartstore-project/templates/hanmi-form.xls")
 PRODUCT_MAPPING = os.path.expanduser("~/smartstore-project/templates/product-mapping.xlsx")
+CONFIG_FILE = os.path.expanduser("~/smartstore-project/config.json")
+
+import json
+with open(CONFIG_FILE) as f:
+    cfg = json.load(f)
+BUSINESS_ID    = cfg["business_id"]
+SENDER_NAME    = cfg["sender_name"]
+SENDER_EMAIL   = cfg["sender_email"]
+SENDER_PHONE   = cfg["sender_phone"]
+SENDER_ADDRESS = cfg["sender_address"]
 
 # 스마트스토어 파일 복호화
 with open(os.path.expanduser(SMARTSTORE_FILE), 'rb') as f:
@@ -85,11 +95,11 @@ for i, row in ss.iterrows():
 
     rows.append({
         hanmi_cols[0]:  i + 1,
-        hanmi_cols[1]:  125052,
-        hanmi_cols[2]:  'FINCH MART',
-        hanmi_cols[3]:  'chulhee.y@gmail.com',
-        hanmi_cols[4]:  '6478010784',
-        hanmi_cols[5]:  '15 Greenview Avenue, 503, North York, Ontario M2M 4M7 Canada',
+        hanmi_cols[1]:  BUSINESS_ID,
+        hanmi_cols[2]:  SENDER_NAME,
+        hanmi_cols[3]:  SENDER_EMAIL,
+        hanmi_cols[4]:  SENDER_PHONE,
+        hanmi_cols[5]:  SENDER_ADDRESS,
         hanmi_cols[6]:  1,
         hanmi_cols[7]:  val(row, '수취인명'),
         hanmi_cols[8]:  phone(row, '수취인연락처1'),
@@ -210,15 +220,15 @@ print(f"✅ 변환 완료: {output_path} ({len(rows)}건)")
    - 오류 발생 시 원인을 설명하고 해결 방법을 안내한다.
 
 ## 고정값 (발송인 정보)
-| 항목 | 값 |
+발송인 정보는 `~/smartstore-project/config.json` 에서 읽는다. 해당 파일은 gitignore 처리되어 있으며, `config-example.json`을 복사하여 작성한다.
+
+| 항목 | config.json 키 |
 |---|---|
-| 비즈니스회원 아이디 | 125052 |
-| 보내는 사람 | FINCH MART |
-| 이메일 | chulhee.y@gmail.com |
-| 전화 | 6478010784 |
-| 주소 | 15 Greenview Avenue, 503, North York, Ontario M2M 4M7 Canada |
-| 거래형태 | a |
-| 전자상거래 유형 | B |
+| 비즈니스회원 아이디 | business_id |
+| 보내는 사람 | sender_name |
+| 이메일 | sender_email |
+| 전화 | sender_phone |
+| 주소 | sender_address |
 
 ## 참고
 - 한미택배 양식 파일 경로: `~/smartstore-project/templates/hanmi-form.xls`
