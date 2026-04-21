@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/chulheeyoon/Library/Application Support/Claude/local-agent-mode-sessions/skills-plugin/1ba3fc07-e757-4a47-8280-d69df2cd4275/0a7b25d9-31f2-4bd9-bb55-e93ae737da9e/skills/xlsx/**)",
+      "Bash(python3 -c ' *)",
+      "Bash(pip3 install *)",
+      "Read(//Users/chulheeyoon/Downloads/**)",
+      "Bash(xxd '/Users/chulheeyoon/Downloads/스마트스토어_선택주문발주발송관리_20260421_0912.xlsx')",
+      "Bash(python3)"
+    ]
+  }
+}
