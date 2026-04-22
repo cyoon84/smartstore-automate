@@ -77,6 +77,13 @@ def mget(pmap, col):
     v = pmap.get(col, '')
     return '' if pd.isna(v) else str(v) if v != '' else ''
 
+# 같은 주문 + 같은 상품번호 → 수량 합산
+ss['_product_num'] = ss['상품번호'].astype(str).str.split('.').str[0]
+ss['_order_num']   = ss['주문번호'].astype(str)
+agg_dict = {col: 'first' for col in ss.columns if col not in ['수량', '_product_num', '_order_num']}
+agg_dict['수량'] = 'sum'
+ss = ss.groupby(['_order_num', '_product_num'], sort=False).agg(agg_dict).reset_index()
+
 # HS CODE 컬럼 인덱스 (0-based)
 hs_col_idx = hanmi_cols.index('HS CODE')
 
@@ -86,9 +93,9 @@ seen_orders = {}  # 주문번호 → 첫 번째 행 번호 추적
 row_num = 1
 
 for i, row in ss.iterrows():
-    product_num = str(row.get('상품번호', '')).split('.')[0]
+    product_num = row['_product_num']
+    order_num   = row['_order_num']
     pmap = product_map.get(product_num)
-    order_num = str(val(row, '주문번호'))
 
     eng_name   = mget(pmap, '상품명(영문)')
     hs_code    = mget(pmap, 'HS CODE')
