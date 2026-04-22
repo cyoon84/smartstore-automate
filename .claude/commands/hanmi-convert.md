@@ -217,7 +217,9 @@ print(f"✅ 변환 완료: {output_path} ({len(rows)}건)")
      - **HS CODE** — 필수
      - **브랜드** — 필수
      - **단가** (숫자, CAD 기준)
-     - **SITE URL**
+     - **SITE URL** — 판매처 URL만 입력받아 자동으로 아래 형식으로 조합:
+       `https://smartstore.naver.com/finchmart_ca/ (입력받은_URL)`
+       예: `www.costco.ca` 입력 시 → `https://smartstore.naver.com/finchmart_ca/ (www.costco.ca)`
      - **해외판매자 상호**
 
    - 입력받은 내용을 아래 Python으로 `product-mapping.xlsx`에 추가한다:
@@ -229,7 +231,11 @@ print(f"✅ 변환 완료: {output_path} ({len(rows)}건)")
    wb_map = load_workbook(PRODUCT_MAPPING)
    ws_map = wb_map.active
 
-   # 누락 상품마다 반복
+   def format_site_url(url):
+       if not url: return ''
+       return f"https://smartstore.naver.com/finchmart_ca/ ({url})"
+
+   # 누락 상품마다 반복 (site_url은 format_site_url() 적용)
    new_entries = [
        # (상품번호, 한글상품명, hs_code, 영문상품명, 브랜드, 단가, site_url, 해외판매자상호)
        # 사용자 입력값으로 채울 것
