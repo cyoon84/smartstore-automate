@@ -77,11 +77,18 @@ def mget(pmap, col):
     v = pmap.get(col, '')
     return '' if pd.isna(v) else str(v) if v != '' else ''
 
+# HS CODE 컬럼 인덱스 (0-based)
+hs_col_idx = hanmi_cols.index('HS CODE')
+
 missing_products = []
 rows = []
+seen_orders = {}  # 주문번호 → 첫 번째 행 번호 추적
+row_num = 1
+
 for i, row in ss.iterrows():
     product_num = str(row.get('상품번호', '')).split('.')[0]
     pmap = product_map.get(product_num)
+    order_num = str(val(row, '주문번호'))
 
     eng_name   = mget(pmap, '상품명(영문)')
     hs_code    = mget(pmap, 'HS CODE')
@@ -93,43 +100,58 @@ for i, row in ss.iterrows():
     if not eng_name:
         missing_products.append((product_num, val(row, '상품명')))
 
-    rows.append({
-        hanmi_cols[0]:  i + 1,
-        hanmi_cols[1]:  BUSINESS_ID,
-        hanmi_cols[2]:  SENDER_NAME,
-        hanmi_cols[3]:  SENDER_EMAIL,
-        hanmi_cols[4]:  SENDER_PHONE,
-        hanmi_cols[5]:  SENDER_ADDRESS,
-        hanmi_cols[6]:  1,
-        hanmi_cols[7]:  val(row, '수취인명'),
-        hanmi_cols[8]:  phone(row, '수취인연락처1'),
-        hanmi_cols[9]:  phone(row, '수취인연락처2'),
-        hanmi_cols[10]: zipcode(row, '우편번호'),
-        hanmi_cols[11]: val(row, '기본배송지'),
-        hanmi_cols[12]: val(row, '상세배송지'),
-        hanmi_cols[13]: val(row, '개인통관고유부호'),
-        hanmi_cols[14]: val(row, '배송메세지'),
-        hanmi_cols[15]: 1,
-        hanmi_cols[16]: 'a',
-        hanmi_cols[17]: 1,
-        hanmi_cols[18]: 1,
-        hanmi_cols[19]: 1,
-        hanmi_cols[20]: 1,
-        hanmi_cols[21]: 1,
-        hanmi_cols[22]: 1,
-        hanmi_cols[23]: hs_code,
-        hanmi_cols[24]: '',
-        hanmi_cols[25]: eng_name if eng_name else val(row, '상품명'),
-        hanmi_cols[26]: brand,
-        hanmi_cols[27]: unit_price if unit_price else val(row, '상품가격'),
-        hanmi_cols[28]: val(row, '수량'),
-        hanmi_cols[29]: site_url,
-        hanmi_cols[30]: '',
-        hanmi_cols[31]: 'B',
-        hanmi_cols[32]: '', hanmi_cols[33]: seller, hanmi_cols[34]: '',
-        hanmi_cols[35]: '', hanmi_cols[36]: '', hanmi_cols[37]: '',
-        hanmi_cols[38]: val(row, '주문번호'),
-    })
+    is_first = order_num not in seen_orders
+    if is_first:
+        seen_orders[order_num] = row_num
+
+    new_row = {col: '' for col in hanmi_cols}
+
+    # HS CODE 이후는 항상 채움
+    new_row[hanmi_cols[hs_col_idx]]      = hs_code
+    new_row[hanmi_cols[hs_col_idx + 1]]  = ''
+    new_row[hanmi_cols[hs_col_idx + 2]]  = eng_name if eng_name else val(row, '상품명')
+    new_row[hanmi_cols[hs_col_idx + 3]]  = brand
+    new_row[hanmi_cols[hs_col_idx + 4]]  = unit_price if unit_price else val(row, '상품가격')
+    new_row[hanmi_cols[hs_col_idx + 5]]  = val(row, '수량')
+    new_row[hanmi_cols[hs_col_idx + 6]]  = site_url
+    new_row[hanmi_cols[hs_col_idx + 7]]  = ''
+    new_row[hanmi_cols[hs_col_idx + 8]]  = 'B'
+    new_row[hanmi_cols[hs_col_idx + 9]]  = ''
+    new_row[hanmi_cols[hs_col_idx + 10]] = seller
+    new_row[hanmi_cols[hs_col_idx + 11]] = ''
+    new_row[hanmi_cols[hs_col_idx + 12]] = ''
+    new_row[hanmi_cols[hs_col_idx + 13]] = ''
+    new_row[hanmi_cols[hs_col_idx + 14]] = ''
+    new_row[hanmi_cols[hs_col_idx + 15]] = val(row, '주문번호')
+
+    # 첫 번째 아이템만 앞쪽 전체 채움
+    if is_first:
+        new_row[hanmi_cols[0]]  = row_num
+        new_row[hanmi_cols[1]]  = BUSINESS_ID
+        new_row[hanmi_cols[2]]  = SENDER_NAME
+        new_row[hanmi_cols[3]]  = SENDER_EMAIL
+        new_row[hanmi_cols[4]]  = SENDER_PHONE
+        new_row[hanmi_cols[5]]  = SENDER_ADDRESS
+        new_row[hanmi_cols[6]]  = 1
+        new_row[hanmi_cols[7]]  = val(row, '수취인명')
+        new_row[hanmi_cols[8]]  = phone(row, '수취인연락처1')
+        new_row[hanmi_cols[9]]  = phone(row, '수취인연락처2')
+        new_row[hanmi_cols[10]] = zipcode(row, '우편번호')
+        new_row[hanmi_cols[11]] = val(row, '기본배송지')
+        new_row[hanmi_cols[12]] = val(row, '상세배송지')
+        new_row[hanmi_cols[13]] = val(row, '개인통관고유부호')
+        new_row[hanmi_cols[14]] = val(row, '배송메세지')
+        new_row[hanmi_cols[15]] = 1
+        new_row[hanmi_cols[16]] = 'a'
+        new_row[hanmi_cols[17]] = 1
+        new_row[hanmi_cols[18]] = 1
+        new_row[hanmi_cols[19]] = 1
+        new_row[hanmi_cols[20]] = 1
+        new_row[hanmi_cols[21]] = 1
+        new_row[hanmi_cols[22]] = 1
+        row_num += 1
+
+    rows.append(new_row)
 
 missing_products_output = []
 if missing_products:
@@ -137,7 +159,6 @@ if missing_products:
         missing_products_output.append(f"  상품번호 {num}: {name}")
     print("MISSING:" + "\n".join(missing_products_output))
 
-# 엑셀 파일 생성
 wb = Workbook()
 ws = wb.active
 header_fill = PatternFill('solid', start_color='366092', end_color='366092')
