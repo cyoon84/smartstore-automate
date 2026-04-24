@@ -126,7 +126,7 @@ for i, row in ss.iterrows():
     new_row[hanmi_cols[hs_col_idx + 9]]  = ''
     new_row[hanmi_cols[hs_col_idx + 10]] = seller
     new_row[hanmi_cols[hs_col_idx + 11]] = ''
-    new_row[hanmi_cols[hs_col_idx + 12]] = ''
+    new_row[hanmi_cols[hs_col_idx + 12]] = SENDER_NAME
     new_row[hanmi_cols[hs_col_idx + 13]] = ''
     new_row[hanmi_cols[hs_col_idx + 14]] = ''
     new_row[hanmi_cols[hs_col_idx + 15]] = val(row, '주문번호')
@@ -212,15 +212,35 @@ print(f"✅ 변환 완료: {output_path} ({len(rows)}건)")
 
    Python 코드 실행 결과에서 `missing_products` 리스트가 비어있지 않으면:
 
-   - 누락된 상품마다 사용자에게 아래 항목을 순서대로 질문한다:
-     - **영문 상품명** (상품명(영문)) — 필수
-     - **HS CODE** — 필수
-     - **브랜드** — 필수
-     - **단가** (숫자, CAD 기준)
-     - **SITE URL** — 판매처 URL만 입력받아 자동으로 아래 형식으로 조합:
-       `https://smartstore.naver.com/finchmart_ca/ (입력받은_URL)`
-       예: `www.costco.ca` 입력 시 → `https://smartstore.naver.com/finchmart_ca/ (www.costco.ca)`
-     - **해외판매자 상호**
+   **3-1. 자동 유추**
+
+   누락된 상품마다 한글 상품명을 분석하여 아래 항목을 **직접 유추**한다:
+   - **영문 상품명**: 한글 상품명에서 브랜드명·제품명·용량/수량 정보를 조합해 자연스러운 영문명 생성
+   - **HS CODE**: `~/smartstore-project/templates/hs-code-reference.xlsx` 를 참고해 가장 적합한 코드 선택
+   - **브랜드**: 상품명에서 추출 (예: "팀홀튼 믹스커피" → "Tim Hortons")
+   - **해외판매자 상호**: 사이트 URL의 도메인에서 추출 (대문자로, 예: `www.costco.ca` → `COSTCO`, `www.walmart.ca` → `WALMART`). URL을 모르는 경우 브랜드명으로 대체
+
+   **3-2. 사용자 확인 요청**
+
+   유추한 내용을 아래 형식으로 한 번에 보여주고 확인을 요청한다:
+
+   ```
+   [새 상품 확인] 상품번호 XXXXXXX
+   한글명: (원본 상품명)
+   영문명: (유추한 영문명)  ← 맞나요?
+   HS Code: (유추한 코드)  ← 맞나요?
+   브랜드: (유추한 브랜드)  ← 맞나요?
+
+   확인되면 아래 두 가지만 알려주세요:
+   - 단가 (CAD 기준 숫자)
+   - 구매 사이트 URL (예: www.costco.ca)
+   ```
+
+   - 사용자가 영문명/HS Code/브랜드를 수정하면 그 값을 사용한다.
+   - 사용자가 확인만 하면 유추한 값 그대로 사용한다.
+   - **SITE URL** 은 입력받은 URL을 아래 형식으로 자동 조합:
+     `https://smartstore.naver.com/finchmart_ca/ (입력받은_URL)`
+     예: `www.costco.ca` 입력 시 → `https://smartstore.naver.com/finchmart_ca/ (www.costco.ca)`
 
    - 입력받은 내용을 아래 Python으로 `product-mapping.xlsx`에 추가한다:
 

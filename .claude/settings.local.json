@@ -7,14 +7,12 @@
       "Read(//Users/chulheeyoon/Downloads/**)",
       "Bash(xxd '/Users/chulheeyoon/Downloads/스마트스토어_선택주문발주발송관리_20260421_0912.xlsx')",
       "Bash(python3)",
-      "Read(//Users/chulheeyoon/smartstore-project/**)",
-      "Read(//Users/chulheeyoon/smartstore-project/templates/**)",
-      "Read(//Users/chulheeyoon/smartstore-project/output/**)",
-      "Bash(mkdir -p ~/.claude/commands)",
-      "Bash(cp /Users/chulheeyoon/smartstore-project/.claude/commands/hanmi-invoice.md ~/.claude/commands/)",
-      "Bash(cp /Users/chulheeyoon/smartstore-project/.claude/commands/hanmi-convert.md ~/.claude/commands/)",
-      "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(npm install *)",
+      "Bash(node make_ppt.js)",
+      "Read(//Applications/**)",
+      "Bash(brew install *)",
+      "Bash(pdftoppm -jpeg -r 150 \"/Users/chulheeyoon/Library/Application Support/Claude/local-agent-mode-sessions/skills-plugin/1ba3fc07-e757-4a47-8280-d69df2cd4275/0a7b25d9-31f2-4bd9-bb55-e93ae737da9e/skills/pptx/claude-code-pair-programming.pdf\" \"/Users/chulheeyoon/Library/Application Support/Claude/local-agent-mode-sessions/skills-plugin/1ba3fc07-e757-4a47-8280-d69df2cd4275/0a7b25d9-31f2-4bd9-bb55-e93ae737da9e/skills/pptx/slide\")",
+      "WebSearch"
     ]
   }
 }
