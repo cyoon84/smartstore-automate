@@ -6,7 +6,15 @@
       "Bash(pip3 install *)",
       "Read(//Users/chulheeyoon/Downloads/**)",
       "Bash(xxd '/Users/chulheeyoon/Downloads/스마트스토어_선택주문발주발송관리_20260421_0912.xlsx')",
-      "Bash(python3)"
+      "Bash(python3)",
+      "Read(//Users/chulheeyoon/smartstore-project/**)",
+      "Read(//Users/chulheeyoon/smartstore-project/templates/**)",
+      "Read(//Users/chulheeyoon/smartstore-project/output/**)",
+      "Bash(mkdir -p ~/.claude/commands)",
+      "Bash(cp /Users/chulheeyoon/smartstore-project/.claude/commands/hanmi-invoice.md ~/.claude/commands/)",
+      "Bash(cp /Users/chulheeyoon/smartstore-project/.claude/commands/hanmi-convert.md ~/.claude/commands/)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
