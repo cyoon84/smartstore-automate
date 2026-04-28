@@ -92,6 +92,9 @@ rows = []
 seen_orders = {}  # 주문번호 → 첫 번째 행 번호 추적
 row_num = 1
 
+# 컬럼 인덱스 사전 계산 (중복 컬럼명 문제 방지 — dict 대신 list 사용)
+ZIPCODE_COL_IDX = next(i for i, c in enumerate(hanmi_cols) if c == '우편번호')
+
 for i, row in ss.iterrows():
     product_num = row['_product_num']
     order_num   = row['_order_num']
@@ -111,51 +114,52 @@ for i, row in ss.iterrows():
     if is_first:
         seen_orders[order_num] = row_num
 
-    new_row = {col: '' for col in hanmi_cols}
+    # list 기반으로 구성 (중복 컬럼명 충돌 방지)
+    new_row = [''] * len(hanmi_cols)
 
     # HS CODE 이후는 항상 채움
-    new_row[hanmi_cols[hs_col_idx]]      = hs_code
-    new_row[hanmi_cols[hs_col_idx + 1]]  = ''
-    new_row[hanmi_cols[hs_col_idx + 2]]  = eng_name if eng_name else val(row, '상품명')
-    new_row[hanmi_cols[hs_col_idx + 3]]  = brand
-    new_row[hanmi_cols[hs_col_idx + 4]]  = unit_price if unit_price else val(row, '상품가격')
-    new_row[hanmi_cols[hs_col_idx + 5]]  = val(row, '수량')
-    new_row[hanmi_cols[hs_col_idx + 6]]  = site_url
-    new_row[hanmi_cols[hs_col_idx + 7]]  = ''
-    new_row[hanmi_cols[hs_col_idx + 8]]  = 'B'
-    new_row[hanmi_cols[hs_col_idx + 9]]  = ''
-    new_row[hanmi_cols[hs_col_idx + 10]] = seller
-    new_row[hanmi_cols[hs_col_idx + 11]] = ''
-    new_row[hanmi_cols[hs_col_idx + 12]] = SENDER_NAME
-    new_row[hanmi_cols[hs_col_idx + 13]] = ''
-    new_row[hanmi_cols[hs_col_idx + 14]] = ''
-    new_row[hanmi_cols[hs_col_idx + 15]] = val(row, '주문번호')
+    new_row[hs_col_idx]      = hs_code
+    new_row[hs_col_idx + 1]  = ''
+    new_row[hs_col_idx + 2]  = eng_name if eng_name else val(row, '상품명')
+    new_row[hs_col_idx + 3]  = brand
+    new_row[hs_col_idx + 4]  = unit_price if unit_price else val(row, '상품가격')
+    new_row[hs_col_idx + 5]  = val(row, '수량')
+    new_row[hs_col_idx + 6]  = site_url
+    new_row[hs_col_idx + 7]  = ''
+    new_row[hs_col_idx + 8]  = 'B'
+    new_row[hs_col_idx + 9]  = ''
+    new_row[hs_col_idx + 10] = seller
+    new_row[hs_col_idx + 11] = ''
+    new_row[hs_col_idx + 12] = SENDER_NAME
+    new_row[hs_col_idx + 13] = ''
+    new_row[hs_col_idx + 14] = ''
+    new_row[hs_col_idx + 15] = val(row, '주문번호')
 
     # 첫 번째 아이템만 앞쪽 전체 채움
     if is_first:
-        new_row[hanmi_cols[0]]  = row_num
-        new_row[hanmi_cols[1]]  = BUSINESS_ID
-        new_row[hanmi_cols[2]]  = SENDER_NAME
-        new_row[hanmi_cols[3]]  = SENDER_EMAIL
-        new_row[hanmi_cols[4]]  = SENDER_PHONE
-        new_row[hanmi_cols[5]]  = SENDER_ADDRESS
-        new_row[hanmi_cols[6]]  = 1
-        new_row[hanmi_cols[7]]  = val(row, '수취인명')
-        new_row[hanmi_cols[8]]  = phone(row, '수취인연락처1')
-        new_row[hanmi_cols[9]]  = phone(row, '수취인연락처2')
-        new_row[hanmi_cols[10]] = zipcode(row, '우편번호')
-        new_row[hanmi_cols[11]] = val(row, '기본배송지')
-        new_row[hanmi_cols[12]] = val(row, '상세배송지')
-        new_row[hanmi_cols[13]] = val(row, '개인통관고유부호')
-        new_row[hanmi_cols[14]] = val(row, '배송메세지')
-        new_row[hanmi_cols[15]] = 1
-        new_row[hanmi_cols[16]] = 'a'
-        new_row[hanmi_cols[17]] = 1
-        new_row[hanmi_cols[18]] = 1
-        new_row[hanmi_cols[19]] = 1
-        new_row[hanmi_cols[20]] = 1
-        new_row[hanmi_cols[21]] = 1
-        new_row[hanmi_cols[22]] = 1
+        new_row[0]  = row_num
+        new_row[1]  = BUSINESS_ID
+        new_row[2]  = SENDER_NAME
+        new_row[3]  = SENDER_EMAIL
+        new_row[4]  = SENDER_PHONE
+        new_row[5]  = SENDER_ADDRESS
+        new_row[6]  = 1
+        new_row[7]  = val(row, '수취인명')
+        new_row[8]  = phone(row, '수취인연락처1')
+        new_row[9]  = phone(row, '수취인연락처2')
+        new_row[10] = zipcode(row, '우편번호')
+        new_row[11] = val(row, '기본배송지')
+        new_row[12] = val(row, '상세배송지')
+        new_row[13] = val(row, '개인통관고유부호')
+        new_row[14] = val(row, '배송메세지')
+        new_row[15] = 1
+        new_row[16] = 'a'
+        new_row[17] = 1
+        new_row[18] = 1
+        new_row[19] = 1
+        new_row[20] = 1
+        new_row[21] = 1
+        new_row[22] = 1
         row_num += 1
 
     rows.append(new_row)
@@ -183,11 +187,11 @@ for col_idx, col_name in enumerate(hanmi_cols, 1):
     cell.alignment = center_align
     cell.border = border
 
-ZIPCODE_COL = hanmi_cols.index('우편번호') + 1  # 1-based
+ZIPCODE_COL = ZIPCODE_COL_IDX + 1  # 1-based
 
 for row_idx, row_data in enumerate(rows, 2):
-    for col_idx, col_name in enumerate(hanmi_cols, 1):
-        cell = ws.cell(row=row_idx, column=col_idx, value=row_data[col_name])
+    for col_idx, v in enumerate(row_data, 1):
+        cell = ws.cell(row=row_idx, column=col_idx, value=v)
         cell.font = data_font
         cell.border = border
         cell.alignment = center_align if col_idx in [1,6,15,16,17,18,19,20,21,22,28,31] else left_align
