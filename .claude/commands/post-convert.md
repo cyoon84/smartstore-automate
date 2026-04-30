@@ -49,6 +49,11 @@ rb = xlrd.open_workbook(TEMPLATE, formatting_info=True)
 wb = xl_copy(rb)
 ws = wb.get_sheet(0)
 
+# 템플릿 샘플 행(홍길동1, 홍길동2) 무조건 삭제
+for r in (1, 2):
+    for c in range(17):
+        ws.write(r, c, '')
+
 # 2행부터 데이터 입력 (0-based index)
 for i, (_, row) in enumerate(ss.iterrows(), 1):
     ws.write(i, 0, val(row, '수취인명'))       # 받는 분
