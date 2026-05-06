@@ -75,7 +75,7 @@ for i, (_, row) in enumerate(ss.iterrows(), 1):
     ws.write(i, 16, '')
 
 today = datetime.now().strftime('%Y%m%d')
-output_path = os.path.expanduser(f"~/smartstore-project/output/우체국택배_업로드용_{today}.xls")
+output_path = os.path.expanduser(f"~/smartstore-project/output/우체국택배/우체국택배_업로드용_{today}.xls")
 wb.save(output_path)
 print(f"✅ 변환 완료: {output_path} ({len(ss)}건)")
 ```
@@ -90,4 +90,4 @@ print(f"✅ 변환 완료: {output_path} ({len(ss)}건)")
 - 내용품코드: 생활용품
 - 분할접수: N
 - 템플릿 경로: `~/smartstore-project/templates/post-form.xls`
-- 결과 파일 저장: `~/smartstore-project/output/우체국택배_업로드용_YYYYMMDD.xls`
+- 결과 파일 저장: `~/smartstore-project/output/우체국택배/우체국택배_업로드용_YYYYMMDD.xls`

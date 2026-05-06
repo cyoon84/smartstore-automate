@@ -1,10 +1,10 @@
-한미택배 송장 엑셀을 네이버 스마트스토어 출고 파일에 매칭하여 송장번호를 입력하고 발송처리용 파일을 생성한다.
+우체국택배 송장 엑셀을 네이버 스마트스토어 출고 파일에 매칭하여 송장번호(등기번호)를 입력하고 발송처리용 파일을 생성한다.
 
 ## 사용법
 인자: `$ARGUMENTS`
-- 인자가 없으면 사용자에게 스마트스토어 파일 경로/비밀번호, 한미 송장 파일 경로를 질문한다.
-- 인자 형식: `스마트스토어파일경로 비밀번호 한미송장파일경로`
-  - 예: `~/Downloads/스마트스토어.xlsx 1111 ~/Downloads/송장리스트-Apr21.xls`
+- 인자가 없으면 사용자에게 스마트스토어 파일 경로/비밀번호, 우체국 송장 파일 경로를 질문한다.
+- 인자 형식: `스마트스토어파일경로 비밀번호 우체국송장파일경로`
+  - 예: `~/Downloads/스마트스토어.xlsx 1111 ~/Downloads/2026050656246453_20260506.xls`
 
 ## 실행 절차
 
@@ -23,7 +23,7 @@ from datetime import datetime
 
 SMARTSTORE_FILE = "<스마트스토어_파일_경로>"
 PASSWORD = "<비밀번호>"
-HANMI_INVOICE_FILE = "<한미송장_파일_경로>"
+EPOST_INVOICE_FILE = "<우체국송장_파일_경로>"
 
 def normalize_phone(v):
     if pd.isna(v): return ''
@@ -31,15 +31,15 @@ def normalize_phone(v):
     # 숫자형으로 읽혀 .0이 붙은 경우 제거
     if s.endswith('.0'):
         s = s[:-2]
-    # 한미 송장 파일은 앞자리 0이 빠진 채로 저장되는 경우가 있음 → 양쪽 모두 0 제거 후 비교
+    # 앞자리 0 제거 후 비교 (송장 파일이 0을 빠뜨린 채로 저장되는 경우 대응)
     return s.lstrip('0')
 
-# 한미 송장 파일 읽기 — 이름+전화번호1로 매핑
-hanmi = pd.read_excel(os.path.expanduser(HANMI_INVOICE_FILE), header=0)
+# 우체국 송장 파일 읽기 — 받는분+전화번호로 매핑
+epost = pd.read_excel(os.path.expanduser(EPOST_INVOICE_FILE), header=0)
 name_phone_to_tracking = {}
-for _, r in hanmi.iterrows():
-    key = (r['받는사람'].strip(), normalize_phone(r['전화번호1']))
-    name_phone_to_tracking[key] = str(r['Tracking No'])
+for _, r in epost.iterrows():
+    key = (str(r['받는분']).strip(), normalize_phone(r['받는분 전화번호']))
+    name_phone_to_tracking[key] = str(r['등기번호'])
 
 # 스마트스토어 파일 복호화
 with open(os.path.expanduser(SMARTSTORE_FILE), 'rb') as f:
@@ -98,11 +98,12 @@ if unmatched:
      - 미매칭은 오늘 스마트스토어 파일에 없는 다른 날 주문일 수 있으므로 참고용으로만 안내한다.
 
 ## 매칭 기준
-- **수취인명** (스마트스토어 `수취인명` ↔ 한미 `받는사람`)
-- **전화번호** (스마트스토어 `수취인연락처1` ↔ 한미 `전화번호1`) — 하이픈 제거 후 비교
+- **수취인명** (스마트스토어 `수취인명` ↔ 우체국 `받는분`)
+- **전화번호** (스마트스토어 `수취인연락처1` ↔ 우체국 `받는분 전화번호`) — 하이픈 제거 후 비교
 
 ## 고정 처리
 - 1행(안내문) 삭제
 - 시트명 `발주발송관리` → `발송처리`
 - 택배사는 원본 파일 값 그대로 유지 (우체국택배 등)
+- 송장번호 컬럼에 우체국 `등기번호` 값 입력
 - 결과 파일 저장: `~/smartstore-project/output/발송처리/스마트스토어_발송처리_YYYYMMDD.xlsx`

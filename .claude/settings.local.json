@@ -12,7 +12,10 @@
       "Read(//Applications/**)",
       "Bash(brew install *)",
       "Bash(pdftoppm -jpeg -r 150 \"/Users/chulheeyoon/Library/Application Support/Claude/local-agent-mode-sessions/skills-plugin/1ba3fc07-e757-4a47-8280-d69df2cd4275/0a7b25d9-31f2-4bd9-bb55-e93ae737da9e/skills/pptx/claude-code-pair-programming.pdf\" \"/Users/chulheeyoon/Library/Application Support/Claude/local-agent-mode-sessions/skills-plugin/1ba3fc07-e757-4a47-8280-d69df2cd4275/0a7b25d9-31f2-4bd9-bb55-e93ae737da9e/skills/pptx/slide\")",
-      "WebSearch"
+      "WebSearch",
+      "Bash(cp ~/smartstore-project/.claude/commands/hanmi-invoice.md ~/.claude/commands/hanmi-invoice.md)",
+      "Bash(cp ~/smartstore-project/.claude/commands/post-convert.md ~/.claude/commands/post-convert.md)",
+      "Bash(cp ~/smartstore-project/.claude/commands/epost-convert.md ~/.claude/commands/epost-convert.md)"
     ]
   }
 }

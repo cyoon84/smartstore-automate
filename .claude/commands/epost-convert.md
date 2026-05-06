@@ -10,16 +10,14 @@
 1. **필수 라이브러리 확인 및 설치**
 
 ```bash
-pip3 install msoffcrypto-tool pandas openpyxl xlrd -q
+pip3 install msoffcrypto-tool pandas openpyxl xlrd xlwt -q
 ```
 
 2. **파일 읽기 및 변환** 아래 Python 코드를 실행한다:
 
 ```python
 import msoffcrypto, io, pandas as pd, os
-from openpyxl import Workbook
-from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
-from openpyxl.utils import get_column_letter
+import xlwt
 from datetime import datetime
 
 SMARTSTORE_FILE = "<스마트스토어_파일_경로>"
@@ -82,41 +80,57 @@ for _, row in ss_dedup.iterrows():
         '', '', '', ''               # N~Q 분할접수 관련
     ])
 
-# 엑셀 생성
-wb = Workbook()
-ws = wb.active
+# 엑셀 생성 (.xls — 우체국택배 사이트가 .xls 형식만 허용)
+wb = xlwt.Workbook(encoding='utf-8')
+ws = wb.add_sheet('Sheet1')
 
-header_fill = PatternFill('solid', start_color='C00000', end_color='C00000')
-header_font = Font(name='Arial', bold=True, color='FFFFFF', size=9)
-data_font   = Font(name='Arial', size=9)
-center = Alignment(horizontal='center', vertical='center', wrap_text=True)
-left   = Alignment(horizontal='left',   vertical='center', wrap_text=False)
-thin   = Side(style='thin', color='CCCCCC')
-border = Border(left=thin, right=thin, top=thin, bottom=thin)
+header_style = xlwt.easyxf(
+    'font: name Arial, bold on, height 180, color white;'
+    'pattern: pattern solid, fore_color dark_red;'
+    'alignment: horizontal center, vertical center, wrap on;'
+    'borders: left thin, right thin, top thin, bottom thin;'
+)
+text_left = xlwt.easyxf(
+    'font: name Arial, height 180;'
+    'alignment: horizontal left, vertical center;'
+    'borders: left thin, right thin, top thin, bottom thin;'
+)
+text_center = xlwt.easyxf(
+    'font: name Arial, height 180;'
+    'alignment: horizontal center, vertical center;'
+    'borders: left thin, right thin, top thin, bottom thin;'
+)
+zip_style = xlwt.easyxf(
+    'font: name Arial, height 180;'
+    'alignment: horizontal center, vertical center;'
+    'borders: left thin, right thin, top thin, bottom thin;',
+    num_format_str='@'
+)
 
 col_widths = [12, 8, 40, 22, 14, 14, 8, 8, 16, 10, 8, 24, 14, 14, 14, 14, 14]
+for ci, w in enumerate(col_widths):
+    ws.col(ci).width = 256 * w
 
-for ci, (h, w) in enumerate(zip(headers, col_widths), 1):
-    cell = ws.cell(row=1, column=ci, value=h)
-    cell.font = header_font
-    cell.fill = header_fill
-    cell.alignment = center
-    cell.border = border
-    ws.column_dimensions[get_column_letter(ci)].width = w
-ws.row_dimensions[1].height = 30
+ws.row(0).height_mismatch = True
+ws.row(0).height = 30 * 20
 
-for ri, row_data in enumerate(rows, 2):
-    for ci, v in enumerate(row_data, 1):
-        cell = ws.cell(row=ri, column=ci, value=v)
-        cell.font = data_font
-        cell.border = border
-        cell.alignment = center if ci in [1, 2, 7, 8, 9, 13] else left
-        if ci == 2:
-            cell.number_format = '@'
-    ws.row_dimensions[ri].height = 16
+for ci, h in enumerate(headers):
+    ws.write(0, ci, h, header_style)
+
+center_cols = {0, 6, 7, 8, 12}
+
+for ri, row_data in enumerate(rows, 1):
+    for ci, v in enumerate(row_data):
+        if ci == 1:
+            style = zip_style
+        elif ci in center_cols:
+            style = text_center
+        else:
+            style = text_left
+        ws.write(ri, ci, v, style)
 
 today = datetime.now().strftime('%Y%m%d')
-output_path = os.path.expanduser(f'~/smartstore-project/output/우체국택배_업로드용_{today}.xlsx')
+output_path = os.path.expanduser(f'~/smartstore-project/output/우체국택배/우체국택배_업로드용_{today}.xls')
 wb.save(output_path)
 print(f'✅ 변환 완료: {output_path} ({len(rows)}건)')
 ```
@@ -138,4 +152,5 @@ print(f'✅ 변환 완료: {output_path} ({len(rows)}건)')
 - 주문번호 기준으로 중복 제거 — 한 주문에 여러 상품이 있어도 한 행만 생성
 - 우편번호는 텍스트 형식으로 저장 (앞자리 0 보존)
 - 비밀번호가 없는 경우 PASSWORD를 빈 문자열로 처리
-- 결과 파일 저장 경로: `~/smartstore-project/output/`
+- **저장 형식은 .xls (xlwt)** — 우체국택배 사이트가 .xlsx를 받지 않음
+- 결과 파일 저장 경로: `~/smartstore-project/output/우체국택배/`

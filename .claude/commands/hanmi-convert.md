@@ -207,7 +207,7 @@ for col_idx, width in col_widths.items():
 ws.row_dimensions[1].height = 40
 
 today = datetime.now().strftime('%Y%m%d')
-output_path = os.path.expanduser(f"~/smartstore-project/output/한미택배_업로드용_{today}.xlsx")
+output_path = os.path.expanduser(f"~/smartstore-project/output/한미택배/한미택배_업로드용_{today}.xlsx")
 wb.save(output_path)
 print(f"✅ 변환 완료: {output_path} ({len(rows)}건)")
 ```
@@ -291,7 +291,7 @@ print(f"✅ 변환 완료: {output_path} ({len(rows)}건)")
 ## 참고
 - 한미택배 양식 파일 경로: `~/smartstore-project/templates/hanmi-form.xls`
 - 상품 매핑 테이블 경로: `~/smartstore-project/templates/product-mapping.xlsx`
-- 결과 파일 저장 경로: `~/smartstore-project/output/`
+- 결과 파일 저장 경로: `~/smartstore-project/output/한미택배/`
 - 한미택배 양식 파일이 없거나 경로가 다르면 사용자에게 경로를 질문한다.
 - 스마트스토어 파일에 비밀번호가 없는 경우 PASSWORD를 빈 문자열로 처리한다.
 - 영문 상품명이 없는 상품이 있으면 변환 후 경고를 출력하고, product-mapping.xlsx에 추가하도록 안내한다.
