@@ -1,0 +1,104 @@
+{
+  "10044874416||종류: French Vanilla": {
+    "kor_name": "네스카페 (Nescafe) 리치 인스턴트 커피 - Hazelnut",
+    "option": "종류: French Vanilla",
+    "preferred_eng": "Nescafe French Vanilla",
+    "product_id": "10044874416"
+  },
+  "10044874416||종류: Hazelnut": {
+    "kor_name": "네스카페 (Nescafe) 리치 인스턴트 커피 - Hazelnut",
+    "option": "종류: Hazelnut",
+    "preferred_eng": "Nescafe Hazelnut",
+    "product_id": "10044874416"
+  },
+  "10123979694||Roasting: Dark": {
+    "kor_name": "맥도날드 맥까페 (McCafe) 프리미엄 인스턴트 커피 미디움 다크 로스트100g",
+    "option": "Roasting: Dark",
+    "preferred_eng": "MCCAFE INSTANT COFFEE DARK ROAST",
+    "product_id": "10123979694"
+  },
+  "10512347995||": {
+    "kor_name": "오레오 쿠키 과자 시나몬 번 cinnamon bun, 261g, 1개",
+    "option": "",
+    "preferred_eng": "Oreo Cinnamon bun",
+    "product_id": "10512347995"
+  },
+  "10632467935||": {
+    "kor_name": "브룩사이드 다크 초콜릿 3가지맛 40봉 x 20g",
+    "option": "",
+    "preferred_eng": "Brookside Chocolate 40 x 20g",
+    "product_id": "10632467935"
+  },
+  "10946622866||": {
+    "kor_name": "타이드 파워 포드 세탁 캡슐 세제 104개입, 위드 다우니 에이프릴 프레쉬, 1개",
+    "option": "",
+    "preferred_eng": "Tide April Fresh Pods With Downy Liquid Laundry Detergent",
+    "product_id": "10946622866"
+  },
+  "12314503739||종류: 다크": {
+    "kor_name": "Tim Hortons 팀홀튼 프리미엄 인스턴트 커피 100g",
+    "option": "종류: 다크",
+    "preferred_eng": "TIM Hortons Dark Roast Instant Coffee (Amazon tracking n/a)",
+    "product_id": "12314503739"
+  },
+  "12919722112||": {
+    "kor_name": "스타벅스 네스프레소 버츄오 머신 호환 캡슐 커피 Caffe Verona, 8개입, 1개",
+    "option": "",
+    "preferred_eng": "Starbucks Nespresso Vertuo CAFE VERONA",
+    "product_id": "12919722112"
+  },
+  "12919722116||": {
+    "kor_name": "스타벅스 네스프레소 버츄오 머신 호환 캡슐 커피 French Roast, 8개입, 1개",
+    "option": "",
+    "preferred_eng": "Starbucks Nespresso Vertuo FRENCH ROAST",
+    "product_id": "12919722116"
+  },
+  "12919722121||": {
+    "kor_name": "스타벅스 네스프레소 버츄오 머신 호환 캡슐 커피 Iced Double Espresso, 8개입, 1개",
+    "option": "",
+    "preferred_eng": "Starbucks Nespresso Vertuo ICED DOUBLE ESPRESSO",
+    "product_id": "12919722121"
+  },
+  "12919722122||": {
+    "kor_name": "스타벅스 네스프레소 버츄오 머신 호환 캡슐 커피 아이스 더블 에스프레소 바닐라, 8개입, 1개",
+    "option": "",
+    "preferred_eng": "Starbucks Nespresso Vertuo ICED DOUBLE ESPRESSO VANILLA",
+    "product_id": "12919722122"
+  },
+  "13209346991||": {
+    "kor_name": "청소왕 브라이언 다우니 언스토퍼블 향기부스터 비즈 베르가못 no.37, 303g, 1개",
+    "option": "",
+    "preferred_eng": "Downy Unstoppable No 37",
+    "product_id": "13209346991"
+  },
+  "13385417678||": {
+    "kor_name": "캐나다 코스트코 네슬레 킷캣 F1 레이싱카 밀크초콜릿 693g",
+    "option": "",
+    "preferred_eng": "Chocolate – Kit Kat F1",
+    "product_id": "13385417678"
+  },
+  "13425757113||": {
+    "kor_name": "타코벨 치폴레 크리미소스 354ml 멕시칸소스",
+    "option": "",
+    "preferred_eng": "Taco Bell Chipotle Creamy Sauce 354ml",
+    "product_id": "13425757113"
+  },
+  "13430505801||": {
+    "kor_name": "켈로그 팝타르트 Pop Tarts 프로스티드 딸기맛, 384g, 1개",
+    "option": "",
+    "preferred_eng": "Kellogg's Pop Tarts Frosted Strawberry 384g",
+    "product_id": "13430505801"
+  },
+  "13430548989||": {
+    "kor_name": "켈로그 팝타르트 Pop Tarts 프로스티드 블루베리맛, 384g, 1개",
+    "option": "",
+    "preferred_eng": "Kellogg's Pop Tarts Frosted Blueberry 384g",
+    "product_id": "13430548989"
+  },
+  "13438803519||": {
+    "kor_name": "오레오 케이크스터즈 소프트 미니 케이크 오리지널, 285g, 1개",
+    "option": "",
+    "preferred_eng": "Oreo Cakesters Soft Mini Cakes Original 285g",
+    "product_id": "13438803519"
+  }
+}
