@@ -71,6 +71,8 @@ def main():
 
     filled = 0
     unmatched = []
+    matched_names = []  # 매칭된 수취인 이름 (중복 제거, 첫 등장 순서)
+    seen_matched = set()
     for row in range(3, ws.max_row + 1):
         name = ws.cell(row, name_col).value
         if not name:
@@ -81,6 +83,10 @@ def main():
         if tracking:
             ws.cell(row, song_jang_col).value = tracking
             filled += 1
+            nm = str(name).strip()
+            if nm not in seen_matched:
+                matched_names.append(nm)
+                seen_matched.add(nm)
         else:
             unmatched.append((str(name).strip(), phone))
 
@@ -90,10 +96,12 @@ def main():
     today = datetime.now().strftime("%Y%m%d")
     output_dir = os.path.expanduser("~/smartstore-project/output/발송처리")
     os.makedirs(output_dir, exist_ok=True)
-    output_path = os.path.join(output_dir, f"스마트스토어_발송처리_{today}.xlsx")
+    output_path = os.path.join(output_dir, f"스마트스토어_발송처리_{today}-우체국.xlsx")
     wb.save(output_path)
 
     print(f"DONE:{output_path}:{filled}")
+    if matched_names:
+        print("RECIPIENTS:" + "|".join(matched_names))
     if unmatched:
         print("UNMATCHED:" + "|".join([f"{n}({p})" for n, p in unmatched]))
 
